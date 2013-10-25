@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file        ce_userdata.module
+ * @description
+ *
+ * PHP Version  5.3.13
+ *
+ * @package 
+ * @category
+ * @plugin URI
+ * @copyright   2013, Vadim Pshentsov. All Rights Reserved.
+ * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @author      Vadim Pshentsov <pshentsoff@gmail.com> 
+ * @link        http://pshentsoff.ru Author's homepage
+ * @link        http://blog.pshentsoff.ru Author's blog
+ *
+ * @created     10.10.13
+ */
+
+/**
+ * hook_entity_info() implementation
+ * @return array of entities sets
+ */
+function ce_userdata_entity_info() {
+  $entities = array(
+    'ce_userdata' => array(
+      'label' => t('User data (common extentions) entity'),
+      'controller class' => 'CEUserDataEntityController',
+      'base table' => 'ce_userdata',
+      'entity keys' => array(
+        'id' => 'id',
+        'label' => 'label',
+      ),
+      'access callback' => 'ce_userdata_access',
+      'module' => 'ce_userdata',
+    ),
+  );
+  return $entities;
+}

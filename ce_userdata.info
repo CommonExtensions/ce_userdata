@@ -1,0 +1,10 @@
+name        = User data
+description = Common user's data fields
+package     = Common Extensions
+core        = 7.x
+php         = 5.3
+version     = "7.x-0.0.1-dev"
+dependencies[]  = ce_contacts
+files[]     = ce_userdata.install
+files[]     = ce_userdata.module
+files[]     = inc/CEUserDataEntityController.inc

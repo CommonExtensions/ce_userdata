@@ -1,0 +1,208 @@
+<?php
+/**
+ * @file        ce_userdata.install
+ * @description Install user data module
+ *
+ * PHP Version  5.3
+ *
+ * @package     Common Extentions
+ * @category    Drupal modules
+ * @plugin URI
+ * @copyright   2013, Vadim Pshentsov. All Rights Reserved.
+ * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @author      Vadim Pshentsov <pshentsoff@gmail.com>
+ * @created     07.10.13
+ */
+
+function ce_userdata_schema() {
+
+  $schema['ce_userdata'] = array(
+    'description' => t('Common extensions user data fields'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('Primary key: user ID'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => t("User's {users}.id."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => t('The Unix timestamp when client created.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' =>
+        t('The Unix timestamp when client was recently changed.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'module' => array(
+        'description' => t('Module name that add record'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'FirstName' => array(
+        'description' => t('User first name.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'SecondName' => array(
+        'description' => t('User second name.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'Patronymic' => array(
+        'description' => t('User patronymic.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'Organization' => array(
+        'description' => t('Client organization'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+
+    'primary key' => array('cid'),
+
+    'foreign keys' => array(
+      'users' => array(
+        'table' => 'users',
+        'columns' => array(
+          'uid' => 'uid',
+        ),
+      ),
+    ),
+
+  );
+
+  $schema['ce_userdata_address'] = array(
+    'description' => t('Addresses for {ce_userdata}. One-to-many relation.'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('Unique ID'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => t('{ce_userdata}.id'),
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => t('The Unix timestamp when record created.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' =>
+        t('The Unix timestamp when record was recently changed.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+
+    'primary key' => array('id'),
+
+    'foreign keys' => array(
+      'userdata' => array(
+        'table' => 'ce_userdata',
+        'columns' => array(
+          'uid' => 'id',
+        ),
+      ),
+    ),
+
+  );
+
+  $schema['ce_userdata_contacts'] = array(
+    'description' => t('Contacts of {ce_userdata}. Relation - one-to-many'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('Unique ID'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => t('{ce_userdata}.id'),
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => t('The Unix timestamp when record created.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' =>
+        t('The Unix timestamp when record was recently changed.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'cid' => array(
+        'description' => t('{ce_contacts}.id'),
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+
+    'primary key' => array('id'),
+
+    'foreign keys' => array(
+//      User's data
+      'userdata' => array(
+        'table' => 'ce_userdata',
+        'columns' => array(
+          'uid' => 'id',
+        ),
+      ),
+//      Common extensions - contacts
+      'contacts' => array(
+        'table' => 'ce_contacts',
+        'columns' => array(
+          'cid' => 'id',
+        ),
+      ),
+    ),
+
+  );
+
+
+  return $schema;
+}
+
+function ce_userdata_uninstall() {
+  db_drop_table('ce_userdata');
+  db_drop_table('ce_userdata_address');
+  db_drop_table('ce_userdata_contacts');
+}
